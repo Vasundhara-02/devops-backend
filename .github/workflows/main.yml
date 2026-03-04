@@ -25,9 +25,13 @@ jobs:
       - name: Run Tests
         run: npm test
 
-      - name: Build Docker Image
-        run: docker build -t cipipeline-app .
-
-      - name: Push to Docker Hub
+      - name: Login to Docker Hub
         if: github.ref == 'refs/heads/main'
-        run: echo "Will push in next step"
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build Docker Image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/cipipeline-app .
+
+      - name: Push Docker Image
+        if: github.ref == 'refs/heads/main'
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/cipipeline-app
