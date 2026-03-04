@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
 
 jobs:
   build:
@@ -26,3 +27,7 @@ jobs:
 
       - name: Build Docker Image
         run: docker build -t cipipeline-app .
+
+      - name: Push to Docker Hub
+        if: github.ref == 'refs/heads/main'
+        run: echo "Will push in next step"
